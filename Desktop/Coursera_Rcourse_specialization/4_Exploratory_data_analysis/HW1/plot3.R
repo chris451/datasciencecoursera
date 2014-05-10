@@ -1,0 +1,39 @@
+
+data <- read.csv("exdata_data_household_power_consumption/household_power_consumption.txt", sep=";", header=TRUE, na.strings="?")#, nrows =100)
+
+tidy_data_tmp <- data
+
+tidy_data_tmp$Date <- as.Date(data$Date, "%d/%m/%Y")
+
+
+StartDate <- as.Date("2007-02-01", "%Y-%m-%d")
+EndDate <- as.Date("2007-02-02", "%Y-%m-%d")
+
+
+tidy_data <- tidy_data_tmp[tidy_data_tmp$Date>=StartDate & tidy_data_tmp$Date<=EndDate,]
+
+tidy_data2 <- tidy_data
+
+
+
+tidy_data$Time <- paste(tidy_data$Date, tidy_data$Time, sep=" ")
+
+tidy_data$Time <- strptime(tidy_data$Time, format="%Y-%m-%d %H:%M:%S")
+
+
+Sys.setlocale("LC_TIME", "English") # force R to use English for the name of weekdays
+
+
+# plot 3
+png(filename="plot3.png", width =480, height = 480)
+
+plot(tidy_data$Time,tidy_data$Sub_metering_1, type="l",col="black", xlab="",ylab="Energy sub metering")
+lines(tidy_data$Time,tidy_data$Sub_metering_2,col="red")
+lines(tidy_data$Time,tidy_data$Sub_metering_3, col="blue")
+legend("topright",c("Sub_metering_1","Sub_metering_2","Sub_metering_3"), lty = 1, col=c("black","red","blue"))
+
+dev.off()
+
+
+
+
